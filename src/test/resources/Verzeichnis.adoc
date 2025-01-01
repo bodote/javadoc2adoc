@@ -1,3 +1,4 @@
 = Verzeichnis
 
+* xref:MyTestTwo.adoc[MyTestTwo]
 * xref:MyTest.adoc[MyTest]

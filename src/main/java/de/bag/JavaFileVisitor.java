@@ -3,6 +3,7 @@ package de.bag;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
+import com.github.javaparser.ast.body.RecordDeclaration;
 import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
@@ -14,7 +15,33 @@ import java.util.Optional;
 
 @Slf4j
 @NullMarked
-class ClazzNamePrinter extends VoidVisitorAdapter<DataClazzADoc> {
+class JavaFileVisitor extends VoidVisitorAdapter<DataClazzADoc> {
+    @Override
+    public void visit(RecordDeclaration recordDeclaration, DataClazzADoc dataClazzADoc) {
+        super.visit(recordDeclaration, dataClazzADoc);
+        log.info("recordDeclaration Name Printed: " + recordDeclaration.getName());
+        dataClazzADoc.title = recordDeclaration.getNameAsString();
+        Optional<JavadocComment> comment = recordDeclaration.getJavadocComment();
+        if (comment.isPresent()) {
+            Javadoc javadoc = comment.get().parse();
+            log.info("recordDeclaration comment Printed: "
+                    + javadoc.getDescription().toText());
+            dataClazzADoc.description = javadoc.getDescription().toText();
+
+            javadoc.getBlockTags().forEach(blockTag -> {
+                log.info("blockTag: " + blockTag);
+                dataClazzADoc.clazzParams.add(new DataClazzADoc.ClazzParam(
+                        blockTag.getName().orElse("<missing name>"),
+                        blockTag.getContent().toText()));
+            });
+        }
+        NodeList<AnnotationExpr> ann = recordDeclaration.getAnnotations();
+        if (ann.isEmpty()) {
+            return;
+        }
+        log.info("recordDeclaration annotation Printed: " + ann);
+    }
+
     @Override
     public void visit(ClassOrInterfaceDeclaration clazz, DataClazzADoc dataClazzADoc) {
         super.visit(clazz, dataClazzADoc);
@@ -30,7 +57,7 @@ class ClazzNamePrinter extends VoidVisitorAdapter<DataClazzADoc> {
         if (ann.isEmpty()) {
             return;
         }
-        log.info("clazz annotation Printed: " + ann.toString());
+        log.info("clazz annotation Printed: " + ann);
     }
 
     @Override

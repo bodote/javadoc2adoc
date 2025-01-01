@@ -1,0 +1,7 @@
+= MyTestTwo
+
+A Record class for testing
+
+.Properties of MyTestTwo
+* anotherString: that represents a string
+* anotherInteger: that represents an integer
