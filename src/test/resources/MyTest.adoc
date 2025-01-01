@@ -1,0 +1,7 @@
+= MyTest
+
+this class is used for testing
+
+.Properties of MyTest
+* aString: that represents a string
+* anInt: that represents an integer
