@@ -1,6 +1,7 @@
 package de.bag;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,13 +13,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 class Java2AsciiDocConverterTest {
+    String[] args = {"-i", "src/test/java/de/bag/testfiles", "-o", "target/adocs/de/bag/testfiles"};
+    String outputPath = "target/adocs/de/bag/testfiles";
+    Path file1Path = Paths.get(outputPath + "/MyTest.adoc");
+    Path file2Path = Paths.get(outputPath + "/MyTestTwo.adoc");
+    Path verzeichnis = Paths.get(outputPath + "/Verzeichnis.adoc");
+    @AfterEach
+    void tearDown() throws IOException {
+        Files.deleteIfExists(file1Path);
+        Files.deleteIfExists(file2Path);
+        Files.deleteIfExists(verzeichnis);
+    }
     @Test
     void shouldConvertJavaDoc2asciiDocFile() throws IOException {
-        String[] args = {"-i", "src/test/java/de/bag/testfiles", "-o", "target/adocs/de/bag/testfiles"};
-        String outputPath = "target/adocs/de/bag/testfiles";
-        Path file1Path = Paths.get(outputPath + "/MyTest.adoc");
-        Path file2Path = Paths.get(outputPath + "/MyTestTwo.adoc");
-        Path verzeichnis = Paths.get(outputPath + "/Verzeichnis.adoc");
+
         Files.deleteIfExists(file1Path);
         Files.deleteIfExists(file2Path);
         Files.deleteIfExists(verzeichnis);

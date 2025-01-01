@@ -50,8 +50,7 @@ public class Java2AsciiDocConverter {
         }
     }
 
-    public void convert() throws IOException {
-
+    public void convert() {
         StaticJavaParser.getParserConfiguration().setLanguageLevel(JAVA_21);
         VerzeichnisADoc verzeichnis = new VerzeichnisADoc();
 
@@ -69,6 +68,9 @@ public class Java2AsciiDocConverter {
                             log.error("Error processing file: " + path, e);
                         }
                     });
+        } catch (IOException e) {
+            log.error("Error walking directory", e);
+            throw new RuntimeException(e);
         }
         writeVerzeichnisFile(outputDir, verzeichnis);
     }
